@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="stylesheet" href="/assets/css/print.css" />
+
+    <title>🖨 - DemocrApp</title>
+
+  </head>
+  <body>
+    <div class="header-container">
+        <img class="header-logo" src="/assets/img/EUTCredonwhite.png" />
+    </div>
+    <h1 id="heading">{meeting name}</h1>
+    <h2 id="desc">...</h2>
+
+    <p>
+      You have now been registered. Your <strong>DemocrApp</strong>
+      authentication token is:
+    </p>
+
+    <div class="token-container">
+      <div id="qr-code" qr-data="https://democrapp.bedlamtheatre.co.uk/" src=""></div>
+      <div id="tokenfield" class="text-token">
+        XXXX XXXX
+      </div>
+    </div>
+
+    <div id="tokenwarning" style="display: none;">
+      <h2>NOTE: This token has a proxy attached</h2>
+    </div>
+
+    <div class="link-container">
+      <p>Please go to</p>
+      <p class="link">democrapp.bedlamtheatre.co.uk</p>
+      <p class="">and enter the above code or scan the QR code to be logged in automatically</p>
+    </div>
+
+    <div>
+      <p><strong>IMPORTANT:</strong></p>
+      <p>For DemocrApp to work, you need to connected to the "Bedlam" WiFi network. The password should be somewhere obvious.</p>
+    </div>
+
+  </body>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5"></script>
+
+  <script>
+    $.urlParam = function(name){
+      var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+      if (results==null){
+        return null;
+      }
+      else{
+        return decodeURI(results[1]) || 0;
+      }
+    }
+    
+    $(document).ready(() => {
+      var t = $.urlParam('t');
+      var m = $.urlParam('m');
+      $('#tokenfield').html(t);
+      $('#qr-code').attr("qr-data", "https://democrapp.bedlamtheatre.co.uk/?t=" + t + "&m=" + m);
+      $('#heading').html($.urlParam('h'));
+      $('#desc').html($.urlParam('d'));
+      if ($.urlParam('p') == "True") {
+        $('#tokenwarning').show();
+      };
+      var qr = qrcode(4, 'L');
+      qr.addData(document.getElementById('qr-code').getAttribute('qr-data'));
+      qr.make();
+      document.getElementById('qr-code').innerHTML = qr.createImgTag(3);
+      $(document).ready(() => {
+        window.print();
+        setTimeout(function () { window.close(); }, 100);
+      });
+    });
+  </script>
+</html>

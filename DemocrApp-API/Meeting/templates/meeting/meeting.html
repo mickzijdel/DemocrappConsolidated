@@ -1,0 +1,242 @@
+{% extends 'meeting/_base.html' %}
+
+{% load vote_helpers %}
+
+{% block content %}
+
+<h1>{{ meeting.name }}</h1>
+
+<div class="card">
+  <h5 class="card-header">Manage Ballots</h5>
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Action</th>
+        <th>Recieved</th>
+      </tr>
+    </thead>
+    {% for vote in votes %}
+    <tr>
+      <td><a href="{% url 'meeting/manage_vote' meeting.id vote.id%}">{{vote.name}}</a></td>
+      <td>{{vote.get_state_display}}</td>
+      <td>{% vote_action_button vote %}</td>
+      <td>{% vote_responses_or_remove vote csrf_token %}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+<div class="card">
+  <h5 class="card-header">Create new ballot</h5>
+  <div class="card-body">
+    <form action="{% url 'meeting/new_vote' meeting.id %}" method="post">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group m-1">
+            {{ form.name.label_tag }}
+            {{ form.name.errors }}
+            <input type="text" class="form-control" name="{{ form.name.html_name }}" maxlength="150" required id="{{ form.name.id_for_label }}"></input>
+          </div>
+          <div class="form-group m-1">
+            {{ form.method.label_tag }}
+            {{ form.method.errors }}
+            <select name="{{ form.method.html_name }}" id="{{ form.method.id_for_label }}" class="form-control">
+              <option value="" selected>-- please select --</option>
+              {% for x,y in form.method.field.choices %}
+                  <option value="{{ x }}">{{ y }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group m-1">
+            {{ form.description.label_tag }}
+            {{ form.description.errors }}
+            <textarea class="form-control col" name="{{ form.description.html_name }}" row="3" maxlength="150" required id="{{ form.description.id_for_label }}"></textarea>
+          </div>
+          <input type="submit" value="Submit" class="btn btn-primary m-1 align-right" />
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+        <h5 class="card-header">Create voter token</h5>
+        <div class="card-body">
+          <form>
+            {% csrf_token %}
+            <label for="proxy">voter has proxy?</label>
+            <input type="checkbox" name="proxy"/>
+            <input type="button" class="btn btn-sm btn-primary" onclick="create_token()" value="create token" />
+          </form>
+        </div>
+      </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <h5 class="card-header">Send announcement</h5>
+      <div class="card-body">
+        <input type="text" id="message_textbox">
+        <button type="button" class="btn btn-sm btn-primary" id="announcement_submit" onclick="send_announcement()">announce</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+        <h5 class="card-header">Invalidate voter token</h5>
+        <div class="card-body">
+          <form id="token_invalidation_form">
+            {% csrf_token %}
+              <input type="number" id="invalidate_token_textbox" min="10000000" max="99999999">
+              <input type="button" class="btn btn-sm btn-primary" onclick="invalidate_token()" value="invalidate token" />
+          </form>
+        </div>
+      </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+        <h5 class="card-header">Close Meeting</h5>
+        <div class="card-body">
+          <form action="{% url 'meeting/close' meeting.id %}" method="post">
+            {% csrf_token %}
+              <input type="submit" class="btn btn-sm btn-danger" onclick="close_meeting(event)" value="Close" />
+          </form>
+        </div>
+      </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block footerscripts %}
+<script>
+    var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+    function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    function send_announcement() {
+        var message = $('#message_textbox').val();
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+        $.ajax({
+            type:'POST',
+            url: '{% url 'meeting/announcement' meeting.id %}',
+            data: {
+              'message': message
+            },
+            dataType: 'json',
+            success: function (data) {
+              if (data.result == "success") {
+                $('#message_textbox').val("")
+              }
+            },
+            error: function(textStatus) {
+                alert("Error creating announcement.");
+                console.log("Error creating announcement:");
+                console.log(textStatus);
+            }
+        });
+    };
+
+    function create_token() {
+      $.ajaxSetup({
+          beforeSend: function(xhr, settings) {
+              if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                  xhr.setRequestHeader("X-CSRFToken", csrftoken);
+              }
+          }
+      });
+      $.ajax({
+        type:'POST',
+        url: '{% url 'meeting/create_token' meeting.id %}',
+        data: {
+          'type': 'create_token',
+          'proxy': $('[name=proxy]').prop('checked')
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.result == "success") {
+            console.log("Created token.");
+            console.log(data);
+            window.open(data.print_url);
+            return;
+          }
+          else {
+            alert("Error creating token. See JS console.");
+            console.log("Error creating token:");
+            console.log(data);
+          }
+        },
+        error: function(textStatus) {
+          alert("Error creating token. See JS console.");
+          console.log("Error creating token:");
+          console.log(textStatus);
+        }
+      });
+    };
+    function invalidate_token() {
+      $.ajaxSetup({
+          beforeSend: function(xhr, settings) {
+              if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                  xhr.setRequestHeader("X-CSRFToken", csrftoken);
+              }
+          }
+      });
+      $.ajax({
+        type:'POST',
+        url: '{% url 'meeting/deactivate_token' meeting.id %}',
+        data: {
+          'key': $('#invalidate_token_textbox')[0].valueAsNumber
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.result == "success") {
+            console.log("invalidated token.");
+            console.log(data);
+            $('#token_invalidation_form')[0].reset();
+            alert("Success");
+            return;
+          }
+          else {
+            if (data.reason && data.reason == "token doesnt exist") {
+              alert("Token Doesnt exist, check you typed the number in correctly");
+            } else {
+              alert("Error invalidating token. See JS console.");
+              console.log("Error invalidating token:");
+              console.log(data);
+            }
+          }
+        },
+        error: function(textStatus) {
+          alert("Error invalidating token. See JS console.");
+          console.log("Error invalidating token:");
+          console.log(textStatus);
+        }
+      });
+    };
+
+    function close_meeting(e){
+        if(confirm("Are you sure? this will close all open votes and delete unopened ones")){
+            return true;
+        } else {
+            e.preventDefault();
+            return false;
+        }
+    }
+</script>
+{% endblock %}

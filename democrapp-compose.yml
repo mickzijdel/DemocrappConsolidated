@@ -1,0 +1,68 @@
+version: '3'
+services:
+  web:
+    build:
+      context: .
+      dockerfile:  ./docker/django_server/Dockerfile
+    command: bash -c "python manage.py migrate && echo yes | python manage.py collectstatic && uwsgi --socket 0.0.0.0:8001 --enable-threads --module democrapp_api.wsgi"
+    ports:
+     - "8001:8001"
+    links:
+      - redis:redis
+      - database:database
+    environment:
+      DATABASE_PASSWORD: "${DATABASE_PASSWORD}"
+      SECRET_KEY: "${SECRET_KEY}"
+      DATABASE_USER: "${DATABASE_USER}"
+      DATABASE_PORT: "${DATABASE_PORT}"
+      DATABASE_NAME: "${DATABASE_NAME}"
+    depends_on:
+      - redis
+      - database
+    restart: always
+    volumes:
+        - static_volume:/srv/static
+  websocket:
+    build:
+      context: .
+      dockerfile:  ./docker/django_server/Dockerfile
+    command: bash -c "daphne -b 0.0.0.0 -p 8002 democrapp_api.asgi:application;"
+    ports:
+     - "8002:8002"
+    links:
+      - redis:redis
+      - database:database
+    environment:
+      DATABASE_PASSWORD: "${DATABASE_PASSWORD}"
+      SECRET_KEY: "${SECRET_KEY}"
+      DATABASE_USER: "${DATABASE_USER}"
+      DATABASE_PORT: "${DATABASE_PORT}"
+      DATABASE_NAME: "${DATABASE_NAME}"
+    depends_on:
+      - web
+      - redis
+      - database
+    restart: always
+  redis:
+    image: "redis:alpine"
+    restart: always
+  nginx:
+    build:
+      context: .
+      dockerfile:  ./docker/nginx/Dockerfile
+    ports:
+     - "80:80"
+    restart: always
+    volumes:
+        - static_volume:/srv/api/static
+  database:
+    image: "mysql:5.7"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DATABASE_PASSWORD}"
+      MYSQL_DATABASE: "${DATABASE_NAME}"
+      MYSQL_USER: "${DATABASE_USER}"
+      MYSQL_PASSWORD: "${DATABASE_PASSWORD}"
+      MYSQL_TCP_PORT: "${DATABASE_PORT}"
+    restart: always
+volumes:
+    static_volume:

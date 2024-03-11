@@ -1,0 +1,41 @@
+<h3>Welcome to</h3>
+<h1>{{meeting_name}}</h1>
+
+<p>
+  This DemocrApp kiosk provides online voting functionality for general meetings.
+</p>
+
+<p>
+  If you have not yet registered, please see the company secretary/meeting chair
+  to request your anonymous access token.
+</p>
+
+<h2>Let's get started.</h2>
+
+<p>Please enter your unique voter token in the box below, or scan your token's QR code.</p>
+
+<form id="authForm">
+  <input type="hidden" id="authMeetings" value="{{meeting_id}}" />
+
+  <input class="form-control" type="text" placeholder="token" id="authToken" />
+
+  <button type="submit" class="btn btn-primary mx-auto btn-block">Submit</button>
+</form>
+
+<p>
+  <h5>Notes:</h5>
+  <ul>
+    <li>
+      <strong>Please keep your token handy.</strong> You'll be automatically logged out when you've posted
+      all of your votes and will need it again for the next round.
+    </li>
+    <li>
+      <strong>You can swap between your device and kiosk voting any time.</strong> You can only be logged into
+      one device at a time, and we'll disconnect any other devices if you login elsewhere.
+    </li>
+    <li>
+      <strong>I want to change my votes!</strong> Once you've finished your session and you've been logged
+      out, simply log back into the kiosk and your ballot papers will be returned to you.
+    </li>
+  </ul>
+</p>

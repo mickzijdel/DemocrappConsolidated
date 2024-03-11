@@ -1,0 +1,34 @@
+body {
+  width: 72mm;
+  font-family: sans-serif; }
+
+h1 {
+  font-size: 20pt;
+  margin-bottom: 1mm; }
+
+h2 {
+  font-size: 13pt;
+  font-weight: normal;
+  margin-top: 0; }
+
+.header-container {
+  text-align: center; }
+
+.header-logo {
+  width: 22mm; }
+
+.token-container {
+  text-align: center; }
+  .token-container .text-token {
+    font-size: 21pt;
+    border-top: solid black 1.5px;
+    border-bottom: solid black 1.5px;
+    padding: 2mm; }
+
+.link-container .link {
+  text-align: center;
+  text-decoration: underline;
+  font-size: 14pt; }
+
+.link-container .right {
+  text-align: right; }

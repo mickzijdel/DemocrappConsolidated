@@ -1,0 +1,41 @@
+body {
+  background-image: url('../img/dust_scratches.png');
+  background-repeat: repeat;
+  background-size: initial;
+}
+
+#content {
+  background-color: white;
+  padding: 10px;
+  border-radius: 7px;
+}
+
+.header {
+  text-align: center;
+}
+
+#logo {
+  width: 17vh;
+  margin: 2vw;
+}
+
+#root {
+  border-radius: 10px;
+  border-color: black;
+  border-width: 10px;
+  background-color: #ffff;
+  min-height: 40vh;
+  padding: 5vh 30px 5vh 30px;
+}
+
+#footer {
+  text-align: center;
+  color: #8f8f8f;
+  font-size: smaller;
+  margin-top: 4vh;
+  margin-bottom: 20px;
+}
+
+.card {
+  margin-top: 15px;
+}
