@@ -20,6 +20,7 @@ services:
       - redis
       - database
     restart: always
+    pull_policy: build
     volumes:
         - static_volume:/srv/static
   websocket:
@@ -43,6 +44,7 @@ services:
       - redis
       - database
     restart: always
+    pull_policy: build
   redis:
     image: "redis:alpine"
     restart: always
@@ -53,6 +55,7 @@ services:
     ports:
      - "80:80"
     restart: always
+    pull_policy: build
     volumes:
         - static_volume:/srv/api/static
   database:
