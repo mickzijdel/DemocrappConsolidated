@@ -1,9 +1,16 @@
-<div id="{{id}}" class="message">
-  <i class="i-main fa fa-bullhorn fa-3x" />
-  <h5>Announcement</h5>
-  <p>{{message}}</p>
-  <p><button type="button" onClick="dismissElement('{{id}}')" class="btn btn-outline-dark">Dismiss</button></p>
-  <p class="small text-muted">
+<div id="{{id}}" class="card message">
+  <div class="card-header">
+    <h5 class="card-title"><i class="i-main fa fa-bullhorn"></i> Announcement</h5>
+  </div>
+  <div class="card-body">
+    <p class="card-text">
+      {{message}}
+    </p>
+    <div class="active-body">
+      <button type="button" onClick="dismissElement('{{id}}')" class="btn btn-outline-dark">Dismiss</button>
+    </div>
+  </div>
+  <div class="card-footer text-muted small">
     This message was sent by the event organisers.
-  </p>
+  </div>
 </div>

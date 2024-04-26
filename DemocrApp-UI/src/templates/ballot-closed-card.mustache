@@ -1,9 +1,18 @@
-<div id="{{id}}" class="message">
-  <i class="i-main fa fa-clock-o fa-3x" />
-  <h5>The ballot titled "{{ballot_name}}" has now closed.</h5>
-  <p>{{reason}}</p>
-  <p><button type="button" onClick="dismissElement('{{id}}')" class="btn btn-outline-dark">Dismiss</button></p>
-  <p class="small text-muted">
+<div class="card message">
+  <div class="card-header">
+    <h5 class="card-title">
+      <i class="i-main fa fa-clock-o"></i> The ballot titled "{{ballot_name}}" has now closed.
+    </h5>
+  </div>
+  <div class="card-body">
+    <p class="card-text">
+      {{reason}}
+    </p>
+    <div class="active-body">
+      <button type="button" onClick="dismissElement('{{id}}')" class="btn btn-outline-dark">Dismiss</button>
+    </div>
+  </div>
+  <div class="card-footer text-muted small">
     No further votes can be submitted.
-  </p>
+  </div>
 </div>

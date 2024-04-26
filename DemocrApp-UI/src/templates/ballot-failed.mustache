@@ -1,6 +1,15 @@
-<div id="{{id}}" class="message">
-  <i class="i-main fa fa-exclamation-triangle fa-3x" />
-  <h5>Your vote for the ballot was not accepted.</h5>
-  <p>{{reason}}</p>
-  <p><button type="button" onClick="dismissElement('{{id}}')" class="btn btn-outline-dark">Dismiss</button></p>
+<div class="card message">
+  <div class="card-header">
+    <h5 class="card-title">
+      <i class="i-main fa fa-exclamation-triangle"></i> Your vote for the ballot was not accepted.
+    </h5>
+  </div>
+  <div class="card-body">
+    <p class="card-text">
+      {{reason}}
+    </p>
+    <div class="active-body">
+      <button type="button" onClick="dismissElement('{{id}}')" class="btn btn-outline-dark">Dismiss</button>
+    </div>
+  </div>
 </div>
