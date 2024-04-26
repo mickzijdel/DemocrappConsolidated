@@ -4,15 +4,8 @@ ADD DemocrApp-UI/package.json /srv/ui/package.json
 WORKDIR /srv/ui
 RUN yarn install --allow-root --unsafe-perm=true
 ADD DemocrApp-UI/. /srv/ui
-RUN yarn build
 
-RUN npm install -g gulp
-RUN npm install gulp
-RUN gulp sass
-
-RUN yarn build
-
-FROM nginx:1.21.0
+FROM nginx:1.25
 WORKDIR /usr/share/nginx/html
 COPY --from=0 /srv/ui/node_modules node_modules/.
 COPY --from=0 /srv/ui/src .
