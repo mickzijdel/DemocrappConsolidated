@@ -58,7 +58,7 @@
             {{ form.description.errors }}
             <textarea class="form-control col" name="{{ form.description.html_name }}" row="3" maxlength="150" required id="{{ form.description.id_for_label }}"></textarea>
           </div>
-          <input type="submit" value="Submit" class="btn btn-primary m-1 align-right" />
+          <input type="submit" value="Submit" class="btn btn-sm btn-primary m-1 align-right" />
         </div>
       </div>
     </form>
@@ -74,7 +74,7 @@
             {% csrf_token %}
             <label for="proxy">voter has proxy?</label>
             <input type="checkbox" name="proxy"/>
-            <input type="button" class="btn btn-sm btn-primary" onclick="create_token()" value="create token" />
+            <input type="button" class="btn btn-sm btn-primary" onclick="create_token()" value="Create Token" />
           </form>
         </div>
       </div>
@@ -97,8 +97,8 @@
         <div class="card-body">
           <form id="token_invalidation_form">
             {% csrf_token %}
-              <input type="number" id="invalidate_token_textbox" min="10000000" max="99999999">
-              <input type="button" class="btn btn-sm btn-primary" onclick="invalidate_token()" value="invalidate token" />
+              <input type="number" id="invalidate_token_textbox" min="10000000" max="99999999"></input>
+              <input type="button" class="btn btn-sm btn-primary" onclick="invalidate_token()"value="Invalidate Token"></input>
           </form>
         </div>
       </div>
@@ -231,7 +231,7 @@
     };
 
     function close_meeting(e){
-        if(confirm("Are you sure? this will close all open votes and delete unopened ones")){
+        if(confirm("Are you sure? This will close all open votes and delete unopened ones")){
             return true;
         } else {
             e.preventDefault();
