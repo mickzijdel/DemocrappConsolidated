@@ -1,7 +1,11 @@
 <form data-ballot="{{ballot_id}}" data-voter="{{voter_id}}" id="b-{{voter_id}}{{ballot_id}}">
   <div class="card ballot">
     <div class="card-header">
-      <div class="ballot-badges"><span class="badge bg-secondary">STV</span>{{#proxy}}<span class="badge bg-info">PROXY</span>{{/proxy}}</div>
+      <div class="ballot-badges">
+        <span class="badge bg-secondary">STV</span>
+        {{#proxy}}<span class="badge bg-info">PROXY</span>{{/proxy}}
+        {{#already_voted}}<span class="badge bg-danger">REVOTE</span>{{/already_voted}}
+      </div>
       <h5 class="card-title">{{title}}</h5>
     </div>
     <div class="card-body">

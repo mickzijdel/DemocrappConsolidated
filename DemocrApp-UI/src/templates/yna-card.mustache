@@ -1,32 +1,43 @@
 <form data-ballot="{{ballot_id}}" data-voter="{{voter_id}}" id="b-{{voter_id}}{{ballot_id}}">
   <div class="card ballot">
     <div class="card-header">
-      <div class="ballot-badges"><span class="badge bg-success">Y/N/A</span>{{#proxy}}<span class="badge bg-info">PROXY</span>{{/proxy}}</div>
+      <div class="ballot-badges">
+        <span class="badge bg-success">Y/N/A</span>
+        {{#proxy}}<span class="badge bg-info">PROXY</span>{{/proxy}}
+        {{#already_voted}}
+          <a class="badge bg-danger" data-bs-toggle="collapse" href="#collapse-{{voter_id}}{{ballot_id}}" role="button" aria-expanded="false" aria-controls="collapse-{{voter_id}}{{ballot_id}}">
+            REVOTE <i class="fa fa-chevron-down" aria-hidden="true"></i>
+          </a>
+        {{/already_voted}}
+      </div>
       <h5 class="card-title">{{title}}</h5>
     </div>
-    <div class="card-body">
-      <p class="card-text">
-        {{desc}}
-      </p>
-      <div class="active-body">
-        <div class="btn-group" role="group" data-ballotid="{{ballot_id}}" data-voterid="{{voter_id}}">
-          <button id="b-{{voter_id}}{{ballot_id}}-y" type="button" class="btn btn-lg btn-success" data-optid="{{yes_id}}" onClick="ynaButtonClick('b-{{voter_id}}{{ballot_id}}-y')">Yes</button>
-          <button id="b-{{voter_id}}{{ballot_id}}-n" type="button" class="btn btn-lg btn-danger" data-optid="{{no_id}}" onClick="ynaButtonClick('b-{{voter_id}}{{ballot_id}}-n')">No</button>
-          <button id="b-{{voter_id}}{{ballot_id}}-a" type="button" class="btn btn-lg btn-secondary" data-optid="{{abs_id}}" onClick="ynaButtonClick('b-{{voter_id}}{{ballot_id}}-a')">Abstain</button>
+    {{#already_voted}}<div class="collapse" id="collapse-{{voter_id}}{{ballot_id}}">{{/already_voted}}
+      <div class="card-body">
+        <p class="card-text">
+          {{desc}}
+        </p>
+        <div class="active-body">
+          <div class="btn-group" role="group" data-ballotid="{{ballot_id}}" data-voterid="{{voter_id}}">
+            <button id="b-{{voter_id}}{{ballot_id}}-y" type="button" class="btn btn-lg btn-success" data-optid="{{yes_id}}" onClick="ynaButtonClick('b-{{voter_id}}{{ballot_id}}-y')">Yes</button>
+            <button id="b-{{voter_id}}{{ballot_id}}-n" type="button" class="btn btn-lg btn-danger" data-optid="{{no_id}}" onClick="ynaButtonClick('b-{{voter_id}}{{ballot_id}}-n')">No</button>
+            <button id="b-{{voter_id}}{{ballot_id}}-a" type="button" class="btn btn-lg btn-secondary" data-optid="{{abs_id}}" onClick="ynaButtonClick('b-{{voter_id}}{{ballot_id}}-a')">Abstain</button>
+          </div>
+        </div>
+        <div class="loader" style="">
+          <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+          <p>Submitting...</p>
+        </div>
+        <div class="success">
+          <i class="fa fa-check fa-4x"></i>
+          <h6>Great! Your vote has been received.</h6>
+          <button class="btn btn-outline-dark" type="button" onClick="dismissElement('b-{{voter_id}}{{ballot_id}}')">Dismiss</button>
         </div>
       </div>
-      <div class="loader" style="">
-        <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
-        <p>Submitting...</p>
-      </div>
-      <div class="success">
-        <i class="fa fa-check fa-4x"></i>
-        <h6>Great! Your vote has been received.</h6>
-        <button class="btn btn-outline-dark" type="button" onClick="dismissElement('b-{{voter_id}}{{ballot_id}}')">Dismiss</button>
+      <div class="card-footer text-muted small">
+        Click your selection once to select and then again to submit.
       </div>
     </div>
-    <div class="card-footer text-muted small">
-      Click your selection once to select and then again to submit.
-    </div>
+    {{#already_voted}}</div>{{/already_voted}}
   </div>
-</div>
+</form>

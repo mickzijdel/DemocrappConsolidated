@@ -12,6 +12,9 @@ var unfilledBallots = 0;
 var KIOSK_MODE;
 var _meetingId;
 
+// Flag to ensure there is only one revote alert.
+var shownRevoteAlert = false;
+
 // Routing
 var routes = {
   "_description": "This file is used to define routing of the application.",
@@ -164,11 +167,14 @@ function tokenValid(data) {
 }
 
 function ballotRecieved(msg) {
-  if (msg.existing_ballots) {
+  // If any of the ballots have already been submitted, and the revote-alert has not already been shown, show it.
+  if (msg.existing_ballots.length > 0 && shownRevoteAlert == false) {
+    shownRevoteAlert = true;
     $.get("/templates/revote-alert.mustache", function(template) {
       $(Mustache.render(template, {ballot_name: msg.title})).appendTo('#alerts');
     });
   }
+
   switch (msg.method){
     case "STV":
       console.log("[BALLOT] New using STV");
@@ -179,9 +185,13 @@ function ballotRecieved(msg) {
           desc: msg.desc,
           options: msg.options
         }
+
+        // I do not understand why this check is necessary, but I am reluctant to delete it. It is true for both the primary voter and any proxies.
         if ((voter.type != "proxy") || msg.proxies){
           v.proxy = (voter.type == "proxy");
           v.voter_id = voter.token;
+          v.already_voted = msg.existing_ballots.some(el => el.option__vote === msg.ballot_id && el.token_id===voter.token)
+    
           $.get("/templates/stv-card.mustache", function(template) {
             addBallotCard(Mustache.render(template, v));
           });
@@ -191,6 +201,7 @@ function ballotRecieved(msg) {
     case "YNA":
       console.log("[BALLOT] New using Y/N/A");
       voters.forEach(voter => {
+        // I do not understand why this check is necessary, but I am reluctant to delete it. It is true for both the primary voter and any proxies.
         if ((voter.type != "proxy") || msg.proxies){
           var v = {
             ballot_id: msg.ballot_id,
@@ -214,7 +225,7 @@ function ballotRecieved(msg) {
               default:
                 console.log("[BALLOT] Unexpected YNA option name " + option.name + " - ignoring");
                 break;
-            }
+          }
           })
           if (v.yes_id == undefined || v.no_id == undefined || v.abs_id == undefined) {
             console.error("[BALLOT] Incomplete YNA option ID set. Unable to render.");
@@ -222,6 +233,9 @@ function ballotRecieved(msg) {
           }
           v.proxy = (voter.type == "proxy");
           v.voter_id = voter.token;
+
+          v.already_voted = msg.existing_ballots.some(el => el.option__vote === msg.ballot_id && el.token_id===voter.token)
+
           $.get("/templates/yna-card.mustache", function(template) {
             addBallotCard(Mustache.render(template, v));
           });
