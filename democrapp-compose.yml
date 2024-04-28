@@ -59,7 +59,7 @@ services:
     volumes:
         - static_volume:/srv/api/static
   database:
-    image: "mysql:5.7"
+    image: "mysql:8.3"
     environment:
       MYSQL_ROOT_PASSWORD: "${DATABASE_PASSWORD}"
       MYSQL_DATABASE: "${DATABASE_NAME}"
