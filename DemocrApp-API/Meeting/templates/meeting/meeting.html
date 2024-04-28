@@ -83,8 +83,10 @@
     <div class="card">
       <h5 class="card-header">Send announcement</h5>
       <div class="card-body">
-        <input type="text" id="message_textbox">
-        <button type="button" class="btn btn-sm btn-primary" id="announcement_submit" onclick="send_announcement()">announce</button>
+        <div class="form-group">
+          <textarea class="form-control" id="message_textbox" row="3" maxlength="150" required></textarea>
+        </div>
+        <button type="button" class="btn btn-sm btn-primary" id="announcement_submit" onclick="send_announcement()">Announce</button>
       </div>
     </div>
   </div>
