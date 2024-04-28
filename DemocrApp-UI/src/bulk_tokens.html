@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/assets/css/style.css" />
+
+    <title>Bulk Tokens - DemocrApp</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1 id="heading">{ meeting name}</h1>
+      <h3 id="desc">{ proxy }</h3>
+
+      <table class="table table-striped table-hover">
+        <tbody id="tokens-table">
+        </tbody>
+      </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7"></script>
+  
+    <script>
+    $.urlParam = function(name){
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results==null){
+            return null;
+        }
+        else{
+            return decodeURI(results[1]) || 0;
+        }
+    }
+    
+      $(document).ready(() => {
+        var tokens = $.urlParam('t').replace('[', '').replace(']', '').split('%2C ');
+
+        tokens.forEach((token) => {
+          $('#tokens-table').append(`<tr><td>${token}<button type="button" class="btn-close" aria-label="Close"></button></td></tr>`);
+        });
+
+        $('#heading').html($.urlParam('h') + " Tokens");
+        $('#desc').html("Has proxy: " + $.urlParam('p'));
+
+        // Add event listener to close buttons
+        $('.btn-close').on('click', function() {
+            $(this).closest('tr').remove();
+        });
+      });
+    </script>
+  </body>
+</html>
