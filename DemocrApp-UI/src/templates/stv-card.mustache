@@ -4,35 +4,43 @@
       <div class="ballot-badges">
         <span class="badge bg-secondary">STV</span>
         {{#proxy}}<span class="badge bg-info">PROXY</span>{{/proxy}}
-        {{#already_voted}}<span class="badge bg-danger">REVOTE</span>{{/already_voted}}
+        {{#already_voted}}
+          <a class="badge bg-danger" data-bs-toggle="collapse" href="#collapse-{{voter_id}}{{ballot_id}}" role="button" aria-expanded="false" aria-controls="collapse-{{voter_id}}{{ballot_id}}">
+            REVOTE <i class="fa fa-chevron-down" aria-hidden="true"></i>
+          </a>
+        {{/already_voted}}
       </div>
       <h5 class="card-title">{{title}}</h5>
     </div>
-    <div class="card-body">
-      <p class="card-text">
-        {{desc}}
-      </p>
-    </div>
-    <ul class="list-group list-group-flush">
-    {{#options}}
-      <li class="list-group-item">
-        {{name}}
-        <input name="{{id}}" class="ballot-preference-field" type="number" placeholder="0" />
-      </li>
-    {{/options}}
-    </ul>
-    <div class="loader" style="">
-      <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
-      <p>Submitting...</p>
-    </div>
-    <div class="success">
-      <i class="fa fa-check fa-4x"></i>
-      <h6>Great! Your vote has been received.</h6>
-      <button class="btn btn-outline-dark" type="button" onClick="dismissElement('b-{{voter_id}}{{ballot_id}}')">Dismiss</button>
-    </div>
-    <div class="card-footer">
-      <button type="button" onClick="submitSTVBallot('b-{{voter_id}}{{ballot_id}}')" class="btn btn-primary">Submit Vote</button>
-      <button type="reset" class="btn btn-secondary">Reset</button>
-    </div>
+    {{#already_voted}}<div class="collapse" id="collapse-{{voter_id}}{{ballot_id}}">{{/already_voted}}
+      <div class="card-body">
+        <p class="card-text">
+          {{desc}}
+        </p>
+      </div>
+      <ul class="list-group list-group-flush">
+      {{#options}}
+        <li class="list-group-item">
+          {{name}}
+          <input name="{{id}}" class="ballot-preference-field" type="number" placeholder="0" />
+        </li>
+      {{/options}}
+      </ul>
+      <div class="loader" style="">
+        <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+        <p>Submitting...</p>
+      </div>
+      
+      <div class="success">
+        <i class="fa fa-check fa-4x"></i>
+        <h6>Great! Your vote has been received.</h6>
+        <button class="btn btn-outline-dark" type="button" onClick="dismissElement('b-{{voter_id}}{{ballot_id}}')">Dismiss</button>
+      </div>
+    
+      <div class="card-footer">
+        <button type="button" onClick="submitSTVBallot('b-{{voter_id}}{{ballot_id}}')" class="btn btn-primary">Submit Vote</button>
+        <button type="reset" class="btn btn-secondary">Reset</button>
+      </div>
+    {{#already_voted}}</div>{{/already_voted}}
   </div>
 </form>
