@@ -38,7 +38,7 @@
         var tokens = $.urlParam('t').replace('[', '').replace(']', '').split('%2C ');
 
         tokens.forEach((token) => {
-          $('#tokens-table').append(`<tr><td>${token}<button type="button" class="btn-close" aria-label="Close"></button></td></tr>`);
+          $('#tokens-table').append(`<tr><td class="d-flex justify-content-left align-items-center">${token}<button type="button" class="btn-close" aria-label="Close"></button></td></tr>`);
         });
 
         $('#heading').html($.urlParam('h') + " Tokens");
