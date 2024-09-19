@@ -1,4 +1,3 @@
-version: '3'
 services:
   web:
     build:
@@ -25,6 +24,17 @@ services:
     pull_policy: build
     volumes:
         - static_volume:/srv/static
+    develop:
+      watch:
+        - action: sync
+          path: ./democrapp-API
+          target: /srv/api
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./docker/django_server/settings.py
+        - action: rebuild
+          path: ./democrapp-API/requirements.txt
   websocket:
     build:
       context: .
@@ -50,6 +60,17 @@ services:
         condition: service_healthy
     restart: always
     pull_policy: build
+    develop:
+      watch:
+        - action: sync
+          path: ./democrapp-API
+          target: /srv/api
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./docker/django_server/settings.py
+        - action: rebuild
+          path: ./democrapp-API/requirements.txt
   redis:
     image: "redis:alpine"
     restart: always  
@@ -70,11 +91,20 @@ services:
         condition: service_started
       websocket:
         condition: service_started
+    develop:
+      watch:
+        - action: sync
+          path: ./democrapp-ui
+          target: /usr/share/nginx/html
+          ignore:
+            - ./democrapp-ui/node_modules/
+        - action: rebuild
+          path: ./democrapp-ui/package.json
   database:
     image: "mysql:8.3"
     environment:
       MYSQL_ROOT_PASSWORD: "${DATABASE_PASSWORD}"
-      MYSQL_DATABASE: "${DATABASE_NAME}"
+      MYSQL_DATABASE: "test_${DATABASE_NAME}"
       MYSQL_USER: "${DATABASE_USER}"
       MYSQL_PASSWORD: "${DATABASE_PASSWORD}"
       MYSQL_TCP_PORT: "${DATABASE_PORT}"
