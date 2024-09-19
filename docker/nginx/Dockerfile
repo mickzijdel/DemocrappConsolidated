@@ -5,7 +5,7 @@ WORKDIR /srv/ui
 RUN yarn install --allow-root --unsafe-perm=true
 ADD DemocrApp-UI/. /srv/ui
 
-FROM nginx:1.25
+FROM nginx:1.27
 WORKDIR /usr/share/nginx/html
 COPY --from=0 /srv/ui/node_modules node_modules/.
 COPY --from=0 /srv/ui/src .
