@@ -104,7 +104,7 @@ services:
     image: "mysql:8.3"
     environment:
       MYSQL_ROOT_PASSWORD: "${DATABASE_PASSWORD}"
-      MYSQL_DATABASE: "test_${DATABASE_NAME}"
+      MYSQL_DATABASE: "${DATABASE_NAME}"
       MYSQL_USER: "${DATABASE_USER}"
       MYSQL_PASSWORD: "${DATABASE_PASSWORD}"
       MYSQL_TCP_PORT: "${DATABASE_PORT}"
