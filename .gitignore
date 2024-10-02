@@ -1,3 +1,5 @@
 .DS_store
 .env
 node_modules/
+democrapp_venv/
+*/__pycache__/*
